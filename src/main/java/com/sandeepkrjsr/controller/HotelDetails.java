@@ -1,16 +1,25 @@
 package com.sandeepkrjsr.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Base64;
+import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.sandeepkrjsr.model.Response;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class HotelDetails {
+	
+	private static String BASE_URL = "http://rest.reserve-online.net/property";
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@GetMapping("/")
 	public void homePage() {}
@@ -20,17 +29,22 @@ public class HotelDetails {
 		return "This is the endpoint";
 	}
 	
-	@PostMapping("/hotels")
-	public List<Response> getHotels() {
-		List<Response> list = new ArrayList<>();
-		Response response = new Response();
-		response.setHotelName("Taj Hotel");
-		response.setStartingPrice(1000);
-		list.add(response);
-		response.setHotelName("Hotel Oberoi");
-		response.setStartingPrice(700);
-		list.add(response);
-		return list;
+	@GetMapping("/baseurl")
+	public ResponseEntity<String> baseurl() {
+		
+		String plainCreds = "tripfactory23623:920A445CBBD0F1506960B55C2C3861B3EF8CEA80";
+		byte[] plainCredsBytes = plainCreds.getBytes();
+		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
+		String base64Creds = new String(base64CredsBytes);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		headers.add("Authorization", "Basic " + base64Creds);
+		
+		HttpEntity<String> request = new HttpEntity<String>(headers);
+		ResponseEntity<String> responseEntity = restTemplate.exchange(BASE_URL, HttpMethod.GET, request, String.class);
+		
+		return responseEntity;
 	}
 	
 }
