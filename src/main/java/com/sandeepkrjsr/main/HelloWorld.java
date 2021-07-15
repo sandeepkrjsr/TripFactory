@@ -11,4 +11,9 @@ public class HelloWorld {
 		return "Hello World";
 	}
 	
+	@GetMapping("/endpoint")
+	public String endpoint() {
+		return "This is the endpoint";
+	}
+	
 }
