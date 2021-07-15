@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,12 @@ import org.springframework.web.client.RestTemplate;
 public class HotelDetails {
 	
 	private static String BASE_URL = "http://rest.reserve-online.net/property";
+	
+	@Value("${tripfactory_username}")
+	private String username;
+	
+	@Value("${tripfactory_password}")
+	private String password;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -32,7 +39,8 @@ public class HotelDetails {
 	@GetMapping("/baseurl")
 	public ResponseEntity<String> baseurl() {
 		
-		String plainCreds = "tripfactory23623:920A445CBBD0F1506960B55C2C3861B3EF8CEA80";
+		//String plainCreds = "tripfactory23623:920A445CBBD0F1506960B55C2C3861B3EF8CEA80";
+		String plainCreds = username + ":" + password;
 		byte[] plainCredsBytes = plainCreds.getBytes();
 		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);
