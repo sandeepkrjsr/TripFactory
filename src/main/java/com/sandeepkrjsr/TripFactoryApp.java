@@ -1,4 +1,4 @@
-package com.sandeepkrjsr.main;
+package com.sandeepkrjsr;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
