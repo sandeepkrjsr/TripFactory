@@ -4,6 +4,7 @@
   <artifactId>TripFactory</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>TripFactory</name>
+  <packaging>war</packaging>
   <description>Assignment for TripFactory</description>
   
   <parent>
