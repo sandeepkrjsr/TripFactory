@@ -1,4 +1,4 @@
-package com.sandeepkrjsr.controller;
+package com.sandeepkrjsr.utility;
 
 import java.util.Base64;
 import java.util.Collections;
@@ -10,36 +10,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-@RestController
-public class HotelDetails {
+import com.sandeepkrjsr.model.HotelResponse;
+
+public class Invoker {
 	
-	private static String BASE_URL = "http://rest.reserve-online.net/property";
-	
-	@Value("${tripfactory_username}")
+	@Value("${tripfactory.username}")
 	private String username;
 	
-	@Value("${tripfactory_password}")
+	@Value("${tripfactory.password}")
 	private String password;
 	
 	@Autowired
 	private RestTemplate restTemplate;
-
-	@GetMapping("/")
-	public void homePage() {}
 	
-	@GetMapping("/endpoint")
-	public String endpoint() {
-		return "This is the endpoint";
-	}
-	
-	@GetMapping("/baseurl")
-	public ResponseEntity<String> baseurl() {
+	public ResponseEntity<HotelResponse> invoke(String url) {
 		
-		//String plainCreds = "tripfactory23623:920A445CBBD0F1506960B55C2C3861B3EF8CEA80";
 		String plainCreds = username + ":" + password;
 		byte[] plainCredsBytes = plainCreds.getBytes();
 		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
@@ -50,9 +37,9 @@ public class HotelDetails {
 		headers.add("Authorization", "Basic " + base64Creds);
 		
 		HttpEntity<String> request = new HttpEntity<String>(headers);
-		ResponseEntity<String> responseEntity = restTemplate.exchange(BASE_URL, HttpMethod.GET, request, String.class);
+		ResponseEntity<HotelResponse> responseEntity = restTemplate.exchange(url, HttpMethod.GET, request, HotelResponse.class);
 		
 		return responseEntity;
 	}
-	
+
 }
