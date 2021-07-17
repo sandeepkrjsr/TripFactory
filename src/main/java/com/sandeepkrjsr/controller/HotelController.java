@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,9 +50,21 @@ public class HotelController {
 	 * @return {@link HotelResponse}
 	 */
 	@PostMapping("/hotels")
-	public ResponseEntity<HotelResponse> searchHotels(@RequestBody HotelRequest request) {
+	public ResponseEntity<String> searchHotels(@RequestBody HotelRequest request) {
 		String url = env.getProperty("tripfactory.baseurl") + "/availability?" + request.toString();
-		ResponseEntity<HotelResponse> response = invoker.invoke(url);
+		ResponseEntity<String> response = invoker.invoke(url);
+		return response;
+	}
+	
+	/**
+	 * This method will return details for a particular hotel.
+	 * @param {@link HotelRequest}
+	 * @return {@link HotelResponse}
+	 */
+	@PostMapping("/hotel/{hotelCode}")
+	public ResponseEntity<String> getHotel(@PathVariable String hotelCode, @RequestBody HotelRequest request) {
+		String url = env.getProperty("tripfactory.baseurl") + "/availability/" + hotelCode + "?" + request.toString();
+		ResponseEntity<String> response = invoker.invoke(url);
 		return response;
 	}
 	
