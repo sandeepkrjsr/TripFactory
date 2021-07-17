@@ -8,8 +8,8 @@
 	<title>Trip Factory</title>
 	<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/classic/theme-neptune/resources/theme-neptune-all.css" />
     <script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/ext-all.js"></script>
+    <script src="js/app.js"></script>
 </head>
 <body>
-	<a href="helloworld.html">Click here</a>
 </body>
 </html>

@@ -23,25 +23,37 @@ public class HotelController {
 	@Autowired
 	private Invoker invoker;
 
+	/**
+	 * This method will redirect to index.jsp.
+	 * Webapp starts from here.
+	 * @return {@link index.jsp}
+	 */
 	@GetMapping("/")
-	public void homePage() {}
+	public ModelAndView homePage() {
+		return new ModelAndView("index");
+	}
 	
+	
+	/**
+	 * This endpoint is for testing purpose only.
+	 * To check apis are working or not
+	 * @return String
+	 */
 	@GetMapping("/endpoint")
 	public String endpoint() {
 		return "This is the endpoint";
 	}
 	
+	/**
+	 * This method will return all the available hotels based on criteria.
+	 * @param {@link HotelRequest}
+	 * @return {@link HotelResponse}
+	 */
 	@PostMapping("/hotels")
 	public ResponseEntity<HotelResponse> searchHotels(@RequestBody HotelRequest request) {
 		String url = env.getProperty("tripfactory.baseurl") + "/availability?" + request.toString();
 		ResponseEntity<HotelResponse> response = invoker.invoke(url);
 		return response;
-	}
-	
-	@RequestMapping("/helloworld")
-	public ModelAndView hello() {
-		String helloWorldMessage = "Hello world message";
-		return new ModelAndView("hello", "message", helloWorldMessage);
 	}
 	
 }
