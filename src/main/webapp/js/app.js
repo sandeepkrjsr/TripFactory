@@ -1,12 +1,13 @@
 Ext.application({
 	launch: function(){
-        hotelRequestForm();
+        searchHotelForm();
     }
 });
 
 var formValues;
 
-function hotelRequestForm(){
+// form view to take input and search available hotel 
+function searchHotelForm(){
 	Ext.create('Ext.form.Panel', {
 	    renderTo: Ext.getBody(),
 	    title: 'Hotel Search',
@@ -51,43 +52,28 @@ function hotelRequestForm(){
 	        name: 'checkout',
 	        format: 'Y-m-d',
 	        value: Ext.Date.add(new Date(), Ext.Date.DAY, 2)
-	    }],	    
-	    buttons: [{
+	    },{
+	    	xtype: 'button',
         	text: 'Search',
+        	margin: '25 0 0 0',
         	handler: function() {
-            	var form = this.up('form').getForm();
-            	formValues = form.getValues();
-            	var hotelList = inputSubmit(form);
-            	hotelDetailsGridView(hotelList);
+        	
+            	formValues = this.up('form').getForm().getValues();
+            	
+            	var availableHotelsList = postAjaxSyncCall('/hotels', formValues);
+            	availableHotelsGridView(availableHotelsList.data.hotels);
             	this.up('form').close();
         	}
         }]
 	});
 }
 
-function inputSubmit(form){
-	var jsonResp;
-	Ext.Ajax.request({
-  		url : '/hotels',
-  		method: 'POST',
-  		async: false,
-  		contentType: "application/json",
-  		jsonData: JSON.parse(Ext.util.JSON.encode(form.getValues())),
-  		success: function(response) {
-        	jsonResp = Ext.util.JSON.decode(response.responseText);
-        },
-        failure: function() {
-        	Ext.Msg.alert('Error', 'Please select correct date.');
-        }
-	});
-	return jsonResp.data.hotels;
-}
-
-function hotelDetailsGridView(hotelList){
+// grid view for available hotels
+function availableHotelsGridView(availableHotelsList){
 
 	Ext.create('Ext.data.Store', {
 	    storeId: 'hotelStore',
-	    data: hotelList
+	    data: availableHotelsList
 	});
 	
 	Ext.create('Ext.grid.Panel', {
@@ -96,79 +82,89 @@ function hotelDetailsGridView(hotelList){
 	    store: Ext.data.StoreManager.lookup('hotelStore'),
 	    itemId: 'availableHotelsGridView',
 	    height: 600,
-	    width: 750,
+	    width: '80%',
 	    style: {
        		marginLeft: 'auto',
         	marginRight: 'auto',
+        	marginTop: '50px'
    		},
-	    columns: [{ 
+	    columns: [{
 	        text: 'Hotel Name', 
 	        dataIndex: 'name', 
-	        flex: 3 
+	        flex: 2 
+	    },{
+	        text: 'Rating', 
+	        dataIndex: 'rating', 
+	        flex: 1 
 	    },{ 
 	    	text: 'Starting Price', 
 	    	dataIndex: 'minprice', 
 	    	flex: 1
 	    },{ 
-	    	text: 'View', 
+	    	text: 'View Photo', 
+	    	dataIndex: 'photoL', 
+	    	flex: 1, 
+	    	xtype: 'templatecolumn', 
+	    	tpl: '<a href="javascript:photoViewer(\'{name}\', \'{photoL}\')">View Photo</a>'
+	    },{ 
+	    	text: 'View Rooms', 
 	    	dataIndex: 'code', 
 	    	flex: 1, 
 	    	xtype: 'templatecolumn', 
-	    	//tpl: '<a href="/">View</a>'
-	    	tpl: '<a href="javascript:getHotel(\'{code}\')">View</a>'
+	    	tpl: '<a href="javascript:hotelRoomsGridView(\'{code}\')">View Rooms</a>'
 	    }]
 	});
 	
 }
 
-function getHotel(hotelCode){
-	var jsonResp;
-	Ext.Ajax.request({
-  		url : '/hotel/' + hotelCode,
-  		method: 'POST',
-  		async: false,
-  		contentType: "application/json",
-  		jsonData: JSON.parse(Ext.util.JSON.encode(formValues)),
-  		success: function(response) {
-        	jsonResp = Ext.util.JSON.decode(response.responseText);
-        }
-	});
+// grid view for available hotel rooms
+function hotelRoomsGridView(hotelCode) {
 	
-	hotelView(jsonResp.data.rates);	
-}
-
-function hotelView(hotelDetails) {
+	hotelDetails = postAjaxSyncCall('/hotel/' + hotelCode, formValues);
 	
 	Ext.ComponentQuery.query('#availableHotelsGridView')[0].close();
 	
 	Ext.create('Ext.data.Store', {
 	    storeId: 'hotelStore',
-	    data: hotelDetails
+	    data: hotelDetails.data.rates
 	});
 	
 	Ext.create('Ext.grid.Panel', {
 		renderTo: Ext.getBody(),
-	    title: 'Available Hotels',
+	    title: hotelDetails.data.name,
 	    store: Ext.data.StoreManager.lookup('hotelStore'),
-	    itemId: 'availableHotelsGridView',
-	    height: 600,
-	    width: 750,
+	    height: 300,
+	    width: '80%',
 	    style: {
        		marginLeft: 'auto',
         	marginRight: 'auto',
+        	marginTop: '50px'
    		},
 	    columns: [{ 
 	        text: 'Room Type', 
 	        dataIndex: 'room', 
-	        flex: 3 
+	        flex: 2 
 	    },{ 
 	    	text: 'Rooms Available', 
 	    	dataIndex: 'remaining', 
 	    	flex: 1
 	    },{ 
+	    	text: 'Price', 
+	    	dataIndex: 'pricing', 
+	    	flex: 1,
+	    	renderer: function(pricing) {
+        		return pricing.price;
+    		}
+	    },{ 
+	    	text: 'View Photo', 
+	    	dataIndex: 'url.photoL', 
+	    	flex: 1, 
+	    	xtype: 'templatecolumn', 
+	    	tpl: '<a href="javascript:photoViewer(\'{room}\', \'{url.photoL}\')">View Photo</a>'
+	    },{ 
 	    	text: 'Inclusions', 
 	    	dataIndex: 'rate_desc', 
-	    	flex: 1
+	    	flex: 3
 	    }]
 	});
 	

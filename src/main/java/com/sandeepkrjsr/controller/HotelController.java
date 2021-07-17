@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sandeepkrjsr.model.HotelRequest;
-import com.sandeepkrjsr.model.HotelResponse;
 import com.sandeepkrjsr.utility.APIServiceInvoker;
 
 @RestController

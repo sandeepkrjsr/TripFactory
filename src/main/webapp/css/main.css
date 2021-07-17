@@ -1,0 +1,25 @@
+.x-body {
+    background: white;
+}
+
+.x-panel-header-default {
+    border: 1px solid white;
+}
+
+.x-panel-header-default {
+    background-color: white;
+}
+
+.x-panel-header-title-default {
+    color: black;
+    font-size: 18px;
+    text-align: center;
+}
+
+.x-panel-body-default {
+    border-color: white;
+}
+
+.x-panel-closable {
+	z-index: 5;
+}

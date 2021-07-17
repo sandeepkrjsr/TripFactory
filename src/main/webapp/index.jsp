@@ -7,7 +7,9 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Trip Factory</title>
 	<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/classic/theme-neptune/resources/theme-neptune-all.css" />
+	<link rel = "stylesheet" href = "css/main.css" />
     <script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/extjs/6.0.0/ext-all.js"></script>
+    <script src="js/extUtil.js"></script>
     <script src="js/app.js"></script>
 </head>
 <body>
