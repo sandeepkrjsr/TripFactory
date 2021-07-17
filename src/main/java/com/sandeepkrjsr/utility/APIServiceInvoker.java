@@ -14,20 +14,14 @@ import org.springframework.web.client.RestTemplate;
 
 import com.sandeepkrjsr.model.HotelResponse;
 
-public class Invoker {
-	
-	@Value("${tripfactory.username}")
-	private String username;
-	
-	@Value("${tripfactory.password}")
-	private String password;
+public class APIServiceInvoker {
 	
 	@Autowired
 	private RestTemplate restTemplate;
 	
 	public ResponseEntity<HotelResponse> invoke(String url) {
 		
-		String plainCreds = username + ":" + password;
+		String plainCreds = System.getenv("tripfactory.username") + ":" + System.getenv("tripfactory.password");
 		byte[] plainCredsBytes = plainCreds.getBytes();
 		byte[] base64CredsBytes = Base64.getEncoder().encode(plainCredsBytes);
 		String base64Creds = new String(base64CredsBytes);

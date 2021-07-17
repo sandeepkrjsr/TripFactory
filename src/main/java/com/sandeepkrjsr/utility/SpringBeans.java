@@ -13,8 +13,8 @@ public class SpringBeans {
 	}
 	
 	@Bean
-	public Invoker invoker() {
-		return new Invoker();
+	public APIServiceInvoker invoker() {
+		return new APIServiceInvoker();
 	}
 	
 }

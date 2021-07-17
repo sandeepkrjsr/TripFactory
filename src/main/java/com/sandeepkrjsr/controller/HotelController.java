@@ -6,13 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.sandeepkrjsr.model.HotelRequest;
 import com.sandeepkrjsr.model.HotelResponse;
-import com.sandeepkrjsr.utility.Invoker;
+import com.sandeepkrjsr.utility.APIServiceInvoker;
 
 @RestController
 public class HotelController {
@@ -21,7 +20,7 @@ public class HotelController {
 	private Environment env;
 	
 	@Autowired
-	private Invoker invoker;
+	private APIServiceInvoker invoker;
 
 	/**
 	 * This method will redirect to index.jsp.
