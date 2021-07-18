@@ -14,7 +14,7 @@ function photoViewer(title, photoUrl) {
         	src: photoUrl
     	}]
 	});
-	photoWindow.show()
+	photoWindow.show();
 }
 
 // do ajax sync post method call
@@ -34,4 +34,28 @@ function postAjaxSyncCall(endpoint, formValues){
         }
 	});
 	return jsonResp;
+}
+
+// get store for the list of data
+function getStore(storeData){
+	var store = Ext.data.Store({
+	    data: storeData
+	});
+	return store;
+}
+
+// wrap grid inside window 
+function gridContainer(title, grid){
+	var gridContainer = Ext.create('Ext.window.Window', {
+	    renderTo: Ext.getBody(),
+	    cls: 'gridContainer',
+	    modal: true,
+	    draggable: false,
+	    height: 600,
+	    width: '80%',
+	    title: title,
+	    style: 'padding: 0; border-width: 0;',
+   		items: [grid]
+	});
+	gridContainer.show();
 }

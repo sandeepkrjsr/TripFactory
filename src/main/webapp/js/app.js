@@ -1,8 +1,29 @@
 Ext.application({
 	launch: function(){
         searchHotelForm();
+        //test();
     }
 });
+
+function test(){
+	var gridContainer = Ext.create('Ext.window.Window', {
+	    renderTo: Ext.getBody(),
+	    modal: true,
+	    draggable: false,
+	    height: 500,
+	    width: '80%',
+	    title: 'title',
+	    style: 'padding: 0; border-width: 0;',
+   		items: [{
+	        xtype: 'datefield',
+	        fieldLabel: 'Check In',
+	        name: 'checkin',
+	        format: 'Y-m-d',
+	        value: Ext.Date.add(new Date(), Ext.Date.DAY, 1)
+	    }]
+	});
+	gridContainer.show();
+}
 
 var formValues;
 
@@ -57,37 +78,20 @@ function searchHotelForm(){
         	text: 'Search',
         	margin: '25 0 0 0',
         	handler: function() {
-        	
             	formValues = this.up('form').getForm().getValues();
-            	
-            	var availableHotelsList = postAjaxSyncCall('/hotels', formValues);
-            	availableHotelsGridView(availableHotelsList.data.hotels);
-            	this.up('form').close();
+            	availableHotelsGridView();
         	}
         }]
 	});
 }
 
 // grid view for available hotels
-function availableHotelsGridView(availableHotelsList){
+function availableHotelsGridView(){
 
-	Ext.create('Ext.data.Store', {
-	    storeId: 'hotelStore',
-	    data: availableHotelsList
-	});
+	var availableHotelsList = postAjaxSyncCall('/hotels', formValues);
 	
-	Ext.create('Ext.grid.Panel', {
-		renderTo: Ext.getBody(),
-	    title: 'Available Hotels',
-	    store: Ext.data.StoreManager.lookup('hotelStore'),
-	    itemId: 'availableHotelsGridView',
-	    height: 600,
-	    width: '80%',
-	    style: {
-       		marginLeft: 'auto',
-        	marginRight: 'auto',
-        	marginTop: '50px'
-   		},
+	var grid = new Ext.grid.GridPanel({
+	    store: getStore(availableHotelsList.data.hotels),
 	    columns: [{
 	        text: 'Hotel Name', 
 	        dataIndex: 'name', 
@@ -115,6 +119,8 @@ function availableHotelsGridView(availableHotelsList){
 	    }]
 	});
 	
+	gridContainer('Available Hotels', grid);
+	
 }
 
 // grid view for available hotel rooms
@@ -122,24 +128,8 @@ function hotelRoomsGridView(hotelCode) {
 	
 	hotelDetails = postAjaxSyncCall('/hotel/' + hotelCode, formValues);
 	
-	Ext.ComponentQuery.query('#availableHotelsGridView')[0].close();
-	
-	Ext.create('Ext.data.Store', {
-	    storeId: 'hotelStore',
-	    data: hotelDetails.data.rates
-	});
-	
-	Ext.create('Ext.grid.Panel', {
-		renderTo: Ext.getBody(),
-	    title: hotelDetails.data.name,
-	    store: Ext.data.StoreManager.lookup('hotelStore'),
-	    height: 300,
-	    width: '80%',
-	    style: {
-       		marginLeft: 'auto',
-        	marginRight: 'auto',
-        	marginTop: '50px'
-   		},
+	var grid = new Ext.grid.GridPanel({
+	    store: getStore(hotelDetails.data.rates),
 	    columns: [{ 
 	        text: 'Room Type', 
 	        dataIndex: 'room', 
@@ -168,4 +158,9 @@ function hotelRoomsGridView(hotelCode) {
 	    }]
 	});
 	
+	gridContainer(hotelDetails.data.name, grid);
+	
 }
+
+document.getElementsByClassName('x-tool')[0].dataset.qtip="back"
+document.getElementsByClassName('x-tool')[1].dataset.qtip="back"

@@ -20,6 +20,38 @@
     border-color: white;
 }
 
-.x-panel-closable {
-	z-index: 5;
+.x-column-header {
+    border-right: 1px solid white;
+}
+
+.x-grid-header-ct {
+    border: 1px solid white;
+}
+
+.x-css-shadow {
+	box-shadow: none !important;
+}
+
+.gridContainer .x-window-header-title-default {
+    color: black;
+    font-size: 20px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.gridContainer .x-window-body-default {
+    border-color: white;
+}
+
+.gridContainer .x-window-header-default {
+    border-color: #ffffff;
+    background-color: #ffffff !important;
+}
+
+.gridContainer .x-tool-img {
+    background-image: url(../img/back.png);
+}
+
+.gridContainer .x-window-header-default .x-tool-img {
+    background-color: white;
 }
