@@ -1,29 +1,8 @@
 Ext.application({
 	launch: function(){
         searchHotelForm();
-        //test();
     }
 });
-
-function test(){
-	var gridContainer = Ext.create('Ext.window.Window', {
-	    renderTo: Ext.getBody(),
-	    modal: true,
-	    draggable: false,
-	    height: 500,
-	    width: '80%',
-	    title: 'title',
-	    style: 'padding: 0; border-width: 0;',
-   		items: [{
-	        xtype: 'datefield',
-	        fieldLabel: 'Check In',
-	        name: 'checkin',
-	        format: 'Y-m-d',
-	        value: Ext.Date.add(new Date(), Ext.Date.DAY, 1)
-	    }]
-	});
-	gridContainer.show();
-}
 
 var formValues;
 
